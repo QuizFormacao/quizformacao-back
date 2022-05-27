@@ -9,7 +9,7 @@ export default class Utils {
         for (const entity of entities) {
             const repository = connection.getRepository(entity.name); // Get repository
             try {
-                await repository.query(`DELETE FROM ${entity.tableName}`);
+                await repository.query(`DELETE FROM ${ entity.tableName }`);
                 await repository.clear();
             } catch (e: any) {
                 console.log(e.message);
