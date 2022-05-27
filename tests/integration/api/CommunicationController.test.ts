@@ -2,18 +2,6 @@ import request from 'supertest'
 import Utils from "../Utils";
 
 describe('Communication Create', () => {
-    beforeAll(async () => {
-        await Utils.connectDatabase()
-    })
-
-    afterAll(async () => {
-        await Utils.closeConnection()
-    });
-
-    beforeEach(async () => {
-        await Utils.clearDatabase()
-    })
-
     it('should return 200 because data is ok', async () => {
         const data = {
             date: '12/31/2023 23:59:59',
