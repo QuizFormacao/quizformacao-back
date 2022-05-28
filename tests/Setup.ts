@@ -20,7 +20,6 @@ const databaseConfig: ConnectionOptions = {
 };
 
 createConnection(databaseConfig)
-    .then(() => getConnection())
     .then(() => console.log('Test Database Connected'))
     .then(() => jest.run())
     .then(() => console.log('Test ended, restore database'))

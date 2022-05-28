@@ -2,17 +2,19 @@ import Communication, {
     CommunicationFormatEnum,
     CommunicationStatusEnum,
 } from '../../../src/entity/communication/Communication';
+import {getConnection} from "typeorm";
 
 describe('Communication', () => {
     it('should create a entity', async () => {
         let error = false;
         try {
+            ;
             const communication = new Communication();
             communication.date = new Date('12/31/2023 23:59:59');
             communication.recipient = 'João da silva';
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
-            await communication.save();
+            await getConnection().getRepository(Communication).save(communication);
         } catch (e: any) {
             console.log(e.message);
             error = true;
@@ -28,7 +30,7 @@ describe('Communication', () => {
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
             communication.date = new Date('não é uma data');
-            await communication.save();
+            await getConnection().getRepository(Communication).save(communication);
         } catch (e: any) {
             error = true;
         }
@@ -44,10 +46,13 @@ describe('Communication', () => {
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
 
-            await communication.save();
-            await communication.reload();
+            const repository = getConnection().getRepository(Communication);
 
-            communication = await Communication.findOne(communication.id);
+            await repository.save(communication);
+            await communication.reload();
+            await repository.save(communication);
+
+            communication = await repository.findOne(communication.id);
             if (!communication) error = true;
         } catch (e: any) {
             console.log(e.message);
@@ -59,7 +64,8 @@ describe('Communication', () => {
     it('not should find a entity', async () => {
         let error = false;
         try {
-            const communication = await Communication.findOne(999);
+            const repository = getConnection().getRepository(Communication);
+            const communication = await repository.findOne(999);
             if (!communication) error = true;
         } catch (e: any) {
             console.log(e.message);
@@ -76,7 +82,9 @@ describe('Communication', () => {
             communication.recipient = 'João da silva';
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
-            await communication.save();
+
+            const repository = getConnection().getRepository(Communication);
+            await repository.save(communication);
 
             communication.cancelSchedule();
         } catch (e: any) {
@@ -94,7 +102,9 @@ describe('Communication', () => {
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
             communication.status = CommunicationStatusEnum.CANCELED;
-            await communication.save();
+
+            const repository = getConnection().getRepository(Communication);
+            await repository.save(communication);
 
             communication.cancelSchedule();
         } catch (e: any) {
@@ -111,7 +121,9 @@ describe('Communication', () => {
             communication.message = 'Oi João receba esse teste';
             communication.format = CommunicationFormatEnum.EMAIL;
             communication.status = CommunicationStatusEnum.SENT;
-            await communication.save();
+
+            const repository = getConnection().getRepository(Communication);
+            await repository.save(communication);
 
             communication.cancelSchedule();
         } catch (e: any) {
