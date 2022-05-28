@@ -46,10 +46,11 @@ export class Server {
     private routes(): void {
         this.express.use(new Routes().getRouter());
 
-        const swaggerFilePath = this.isTest ? '../../build/' : '../../';
-        const swaggerFile = require(swaggerFilePath + 'swaggerOutput.json');
+        if (!this.isTest) {
+            const swaggerFile = require('../../swaggerOutput.json');
 
-        this.express.use('/docs', SwaggerUI.serve, SwaggerUI.setup(swaggerFile));
+            this.express.use('/docs', SwaggerUI.serve, SwaggerUI.setup(swaggerFile));
+        }
     }
 
     public getExpress() {
