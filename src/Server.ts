@@ -3,21 +3,19 @@ import Express, {Application} from 'express';
 import {createConnection} from 'typeorm';
 import Dotenv from 'dotenv';
 import Cors from 'cors';
-import Routes from './Routes';
-import SwaggerUI from 'swagger-ui-express';
+import Routes from './controllers/Routes';
+import SwaggerUI, {JsonObject} from 'swagger-ui-express';
 
-export class Server {
+export default class Server {
     private readonly express: Application;
-    private readonly isTest?: boolean;
+    private readonly isTest: boolean;
 
     constructor(isTest?: boolean) {
-        this.isTest = isTest;
+        this.isTest = Boolean(isTest);
         Dotenv.config();
         this.express = Express();
 
-        if (!isTest) {
-            this.database();
-        }
+        this.database();
         this.middlewares();
         this.routes();
     }
@@ -40,17 +38,19 @@ export class Server {
 
     /* connect db. see .env for typeorm config */
     private database(): void {
+        if (this.isTest) return;
         createConnection().then(() => console.log('DB Connect to database ' + process.env.TYPEORM_DATABASE));
     }
 
     private routes(): void {
         this.express.use(new Routes().getRouter());
 
-        if (!this.isTest) {
-            const swaggerFile = require('../../swaggerOutput.json');
+        if (this.isTest) return;
+        this.express.use('/docs', SwaggerUI.serve, SwaggerUI.setup(this.getSwaggerFile()));
+    }
 
-            this.express.use('/docs', SwaggerUI.serve, SwaggerUI.setup(swaggerFile));
-        }
+    public getSwaggerFile(): JsonObject {
+        return require('../swaggerOutput.json');
     }
 
     public getExpress() {

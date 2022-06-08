@@ -185,7 +185,7 @@
     ],
     "max-line-length": [
       true,
-      300
+      200
     ],
     "brace-style": [
       true,
@@ -205,10 +205,7 @@
     ],
     "ter-indent": [
       true,
-      2,
-      {
-        "SwitchCase": 1
-      }
+      4
     ],
     "whitespace": [
       true,
@@ -236,6 +233,8 @@
     "ter-func-call-spacing": true,
     "no-return-await": true,
     "no-consecutive-blank-lines": true,
+    "no-case-declarations": true,
+    "prefer-switch": false,
     "trailing-comma": [
       true,
       {
@@ -250,7 +249,9 @@
     "class-name": true,
     "no-this-assignment": [
       true,
-      "allow-destructuring"
+      {
+        "allow-destructuring": true
+      }
     ]
   }
 }

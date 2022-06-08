@@ -10,7 +10,7 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'push',
         };
-        const response = await request(Utils.getApp()).post('/communication').send(data);
+        const response = await request(await Utils.getApp()).post('/communication').send(data);
         expect(response.status).toBe(200);
     });
     it('should return 400 because invalid date', async () => {
@@ -20,7 +20,7 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'push',
         };
-        const response = await request(Utils.getApp()).post('/communication').send(data);
+        const response = await request(await Utils.getApp()).post('/communication').send(data);
         expect(response.status).toEqual(400);
     });
     it('should return 400 because date is before today', async () => {
@@ -30,7 +30,7 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'push',
         };
-        const response = await request(Utils.getApp()).post('/communication').send(data);
+        const response = await request(await Utils.getApp()).post('/communication').send(data);
         expect(response.status).toEqual(400);
     });
     it('should return 400 because invalid format', async () => {
@@ -40,7 +40,7 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'invalid format',
         };
-        const response = await request(Utils.getApp()).post('/communication').send(data);
+        const response = await request(await Utils.getApp()).post('/communication').send(data);
         expect(response.status).toEqual(400);
     });
     it('should return 200 because find a communication', async () => {
@@ -50,13 +50,13 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'whatsapp',
         };
-        let response = await request(Utils.getApp()).post('/communication').send(data);
+        let response = await request(await Utils.getApp()).post('/communication').send(data);
 
-        response = await request(Utils.getApp()).get('/communication/' + response.body.id);
+        response = await request(await Utils.getApp()).get('/communication/' + response.body.id);
         expect(response.status).toBe(200);
     });
     it('should return 404 because not find a communication', async () => {
-        const response = await request(Utils.getApp()).get('/communication/999');
+        const response = await request(await Utils.getApp()).get('/communication/999');
         expect(response.status).toBe(404);
     });
     it('should return 200 because find a communication and status is scheduled', async () => {
@@ -66,13 +66,13 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'whatsapp',
         };
-        let response = await request(Utils.getApp()).post('/communication').send(data);
-        response = await request(Utils.getApp()).put('/communication/' + response.body.id);
+        let response = await request(await Utils.getApp()).post('/communication').send(data);
+        response = await request(await Utils.getApp()).put('/communication/' + response.body.id);
 
         expect(response.status).toBe(200);
     });
     it('should return 404 because not find a communication', async () => {
-        const response = await request(Utils.getApp()).put('/communication/999');
+        const response = await request(await Utils.getApp()).put('/communication/999');
         expect(response.status).toBe(404);
     });
     it('should return 400 because find communication but status is canceled', async () => {
@@ -82,10 +82,10 @@ describe('Communication Create', () => {
             message: 'Mensagem para João Paulo josé',
             format: 'whatsapp',
         };
-        let response = await request(Utils.getApp()).post('/communication').send(data);
-        response = await request(Utils.getApp()).put('/communication/' + response.body.id);
+        let response = await request(await Utils.getApp()).post('/communication').send(data);
+        response = await request(await Utils.getApp()).put('/communication/' + response.body.id);
 
-        response = await request(Utils.getApp()).put('/communication/' + response.body.id);
+        response = await request(await Utils.getApp()).put('/communication/' + response.body.id);
 
         expect(response.status).toBe(400);
     });

@@ -1,5 +1,5 @@
-import Dotenv from 'dotenv';
-import fs from 'fs';
+import * as Dotenv from 'dotenv';
+import * as fs from 'fs';
 
 // tslint:disable-next-line:no-var-requires
 const swaggerAutogen = require('swagger-autogen')();
@@ -30,6 +30,37 @@ class SwaggerGenerate {
             schemes: ['http', 'https'],
             consumes: ['application/json'],
             produces: ['application/json'],
+            securityDefinitions: {
+                apiKeyAuth: {
+                    type: 'apiKey',
+                    in: 'header', // can be 'header', 'query' or 'cookie'
+                    name: 'authorization', // name of the header, query parameter or cookie
+                    description: 'Bearer jwt token',
+                },
+                basicApiKeyAuth: {
+                    type: 'apiKey',
+                    in: 'header', // can be 'header', 'query' or 'cookie'
+                    name: 'authorization', // name of the header, query parameter or cookie
+                    description: 'Basic Base64(login:senha)',
+                },
+            },
+            definitions: {
+                Secretary: {
+                    $name: 'Secretaria de SC',
+                    $emails: ['email@email.com', 'email@email.com'],
+                },
+                ZoneCreate: {
+                    $state: {
+                        id: 1,
+                    },
+                    $secretary: {
+                        $ref:'#/definitions/Secretary',
+                    },
+                    cities: [
+                        {id: 1},
+                    ],
+                },
+            },
         };
 
         try {
@@ -39,16 +70,16 @@ class SwaggerGenerate {
 
             swaggerAutogen(this.swaggerOutputFile, this.endpointsFiles, config).then((result: {success: boolean, data: any}|boolean) => {
                 if (result && typeof result !== 'boolean' && result.success) {
-                    console.log('Swagger Autogen Success');
+                    console.log('Swagger generated');
                 } else {
                     const json = JSON.stringify(result);
                     console.error('SwaggerError ' + json);
-                    throw `SwaggerError ${ json }` ;
+                    throw new Error('SwaggerError ' + json);
                 }
             });
         } catch (err) {
             console.error(err);
-            throw new Error(JSON.stringify(err)) ;
+            throw new Error(JSON.stringify(err));
         }
     }
 }
